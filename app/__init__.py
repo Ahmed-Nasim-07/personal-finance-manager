@@ -9,7 +9,7 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
-
+    from app import models
     from app.routes import main
     app.register_blueprint(main)
 
