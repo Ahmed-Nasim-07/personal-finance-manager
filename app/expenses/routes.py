@@ -1,7 +1,7 @@
 from datetime import date
 
 from flask import Blueprint, render_template, request, redirect, url_for, session
-
+from app.auth.utils import login_required
 from app.extensions import db
 from app.models.expense import Expense
 
@@ -14,10 +14,8 @@ expenses = Blueprint(
 
 
 @expenses.route("/")
+@login_required
 def list_expenses():
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
     expenses_list = Expense.query.filter_by(
         user_id=session["user_id"]
     ).order_by(Expense.date.desc()).all()
@@ -27,11 +25,9 @@ def list_expenses():
         expenses=expenses_list,
     )
 
-
 @expenses.route("/add", methods=["GET", "POST"])
+@login_required
 def add_expense():
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
     if request.method == "POST":
         amount = request.form.get("amount")
         description = request.form.get("description")
@@ -55,11 +51,8 @@ def add_expense():
     return render_template("expenses/add.html")
 
 @expenses.route("/<int:expense_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_expense(expense_id):
-
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
     expense = Expense.query.filter_by(
         id=expense_id,
         user_id=session["user_id"]
@@ -82,11 +75,8 @@ def edit_expense(expense_id):
     )
 
 @expenses.route("/<int:expense_id>/delete", methods=["POST"])
+@login_required
 def delete_expense(expense_id):
-
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
     expense = Expense.query.filter_by(
         id=expense_id,
         user_id=session["user_id"]
