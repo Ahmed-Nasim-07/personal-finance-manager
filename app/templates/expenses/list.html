@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses</title>
+</head>
+
+<body>
+
+    <h1>Expenses</h1>
+
+    {% if expenses %}
+
+        <ul>
+            {% for expense in expenses %}
+                <li>
+                    ₹{{ expense.amount }}
+                    -
+                    {{ expense.description }}
+                    -
+                    {{ expense.date }}
+                </li>
+                <a href="{{ url_for('expenses.edit_expense', expense_id=expense.id) }}">
+                    Edit
+                </a>
+                <form method="POST" action="{{ url_for('expenses.delete_expense', expense_id=expense.id) }}">
+                    <button type="submit">Delete</button>
+                </form>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+
+        <p>No expenses recorded yet.</p>
+
+    {% endif %}
+
+</body>
+</html>

@@ -12,5 +12,9 @@ def create_app():
     from app import models
     from app.routes import main
     app.register_blueprint(main)
+    from app.expenses.routes import expenses
+    app.register_blueprint(expenses)
+    from app.auth.routes import auth
+    app.register_blueprint(auth)
 
     return app
