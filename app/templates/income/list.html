@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income</title>
+</head>
+
+<body>
+
+    <h1>Income</h1>
+
+    <a href="{{ url_for('income.add_income') }}">Add Income</a>
+
+    <br><br>
+
+    {% if income %}
+        <ul>
+            {% for item in income %}
+                <li>
+                    <strong>{{ item.amount }}</strong>
+                    -
+                    {{ item.description or "No description" }}
+                    -
+                    {{ item.category.name }}
+                    -
+                    {{ item.date }}
+
+                    <a href="{{ url_for('income.edit_income', income_id=item.id) }}">
+                        Edit
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('income.delete_income', income_id=item.id) }}"
+                        style="display: inline;"
+                    >
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No income recorded yet.</p>
+    {% endif %}
+
+</body>
+</html>

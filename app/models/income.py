@@ -14,9 +14,23 @@ class Income(db.Model):
         nullable=False,
     )
 
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey("categories.id"),
+        nullable=False,
+    )
+
+    category = db.relationship("Category")
+
     amount = db.Column(db.Numeric(12, 2), nullable=False)
+
     description = db.Column(db.String(255))
-    date = db.Column(db.Date, default=date.today, nullable=False)
+
+    date = db.Column(
+        db.Date,
+        default=date.today,
+        nullable=False,
+    )
 
     created_at = db.Column(
         db.DateTime(timezone=True),

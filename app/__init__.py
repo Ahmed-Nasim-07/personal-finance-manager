@@ -14,7 +14,11 @@ def create_app():
     app.register_blueprint(main)
     from app.expenses.routes import expenses
     app.register_blueprint(expenses)
+    from app.income.routes import income_bp
+    app.register_blueprint(income_bp)
     from app.auth.routes import auth
     app.register_blueprint(auth)
+    from app.categories.routes import categories
+    app.register_blueprint(categories)
 
     return app

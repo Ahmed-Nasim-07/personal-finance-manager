@@ -30,7 +30,23 @@
         >
 
         <br><br>
-
+        
+        <label for="category_id">Category</label>
+        
+        <select id="category_id" name="category_id" required>
+            
+            <option value="">Select a category</option>
+            
+            {% for category in categories %}
+            <option value="{{ category.id }}">
+                {{ category.name }}
+            </option>
+            {% endfor %}
+            
+        </select>
+        
+        <br><br>
+        
         <label for="date">Date</label>
         <input
             type="date"

@@ -17,6 +17,8 @@
                     -
                     {{ expense.description }}
                     -
+                    {{ expense.category.name }}
+                    -
                     {{ expense.date }}
                 </li>
                 <a href="{{ url_for('expenses.edit_expense', expense_id=expense.id) }}">
