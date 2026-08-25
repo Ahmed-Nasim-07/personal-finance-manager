@@ -1,0 +1,104 @@
+/* =========================================================
+   PURITY FINANCE — EXPENSES PAGE
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE LAYOUT
+   ========================================================= */
+
+.expenses-page {
+    width: 100%;
+
+    max-width: 1280px;
+
+    margin: 0 auto;
+
+    padding: 34px 38px 50px;
+}
+
+
+/* =========================================================
+   EXPENSE SUMMARY
+   ========================================================= */
+
+.expense-summary-icon {
+    background: var(--teal-soft);
+
+    color: var(--teal-light);
+}
+
+
+.expense-summary-icon-red {
+    background: var(--expense-soft);
+
+    color: var(--expense);
+}
+
+
+/* =========================================================
+   EXPENSE TRANSACTION ICON
+   ========================================================= */
+
+.expense-icon {
+    background: var(--expense-soft);
+
+    color: var(--expense);
+}
+
+
+/* =========================================================
+   EXPENSE AMOUNT
+   ========================================================= */
+
+.expense-amount {
+    color: var(--expense);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EXPENSE EMPTY STATE
+   ========================================================= */
+
+.expenses-empty-icon {
+    background: var(--expense-soft);
+
+    color: var(--expense);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .expenses-page {
+        padding: 30px 25px 45px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .expenses-page {
+        padding: 25px 18px 40px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .expenses-page {
+        padding: 20px 14px 30px;
+    }
+
+}

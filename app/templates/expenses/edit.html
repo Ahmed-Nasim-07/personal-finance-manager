@@ -1,66 +1,231 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Expense</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Edit Expense | Purity Finance
+{% endblock %}
 
-    <h1>Edit Expense</h1>
+{% block breadcrumb %}
+    Expenses / Edit
+{% endblock %}
 
-    <form method="POST">
+{% block page_heading %}
+    Edit Expense
+{% endblock %}
 
-        <label for="amount">Amount</label>
-        <input
-            type="number"
-            step="0.01"
-            id="amount"
-            name="amount"
-            value="{{ expense.amount }}"
-            required
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/forms.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-content form-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                EXPENSES
+            </p>
+
+            <h2>
+                Edit Expense
+            </h2>
+
+            <p class="page-description">
+                Update the details of this expense.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('expenses.list_expenses') }}"
+            class="secondary-button"
         >
 
-        <br><br>
+            <i class="fa-solid fa-arrow-left"></i>
 
-        <label for="description">Description</label>
-        <input
-            type="text"
-            id="description"
-            name="description"
-            value="{{ expense.description }}"
-            required
+            Back to Expenses
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         FORM CARD
+    ========================== -->
+
+    <div class="form-card">
+
+        <form
+            method="POST"
+            class="finance-form"
         >
 
-        <br><br>
-        
-        <label for="category_id">Category</label>
-        
-        <select id="category_id" name="category_id" required>
-            
-            {% for category in categories %}
-            <option value="{{ category.id }}" {% if category.id==expense.category_id %}selected{% endif %}>
-                {{ category.name }}
-            </option>
-            {% endfor %}
-            
-        </select>
-        
-        <br><br>
-        
-        <label for="date">Date</label>
-        <input
-            type="date"
-            id="date"
-            name="date"
-            value="{{ expense.date }}"
-            required
-        >
+            <!-- =========================
+                 AMOUNT
+            ========================== -->
 
-        <br><br>
+            <div class="form-group">
 
-        <button type="submit">Save Changes</button>
+                <label for="amount">
+                    Amount
+                </label>
 
-    </form>
+                <div class="input-wrapper">
 
-</body>
-</html>
+                    <span class="input-prefix">
+                        ₹
+                    </span>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="amount"
+                        name="amount"
+                        value="{{ expense.amount }}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 DESCRIPTION
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value="{{ expense.description }}"
+                    placeholder="e.g. Lunch, groceries, transport..."
+                    required
+                >
+
+            </div>
+
+
+            <!-- =========================
+                 CATEGORY
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="category_id">
+                    Category
+                </label>
+
+                <select
+                    id="category_id"
+                    name="category_id"
+                    required
+                >
+
+                    {% for category in categories %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if category.id == expense.category_id %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ category.name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <p class="field-help">
+                    Choose the category that best describes this expense.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 DATE
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value="{{ expense.date }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('expenses.list_expenses') }}"
+                    class="secondary-button"
+                >
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

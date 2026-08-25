@@ -1,75 +1,236 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Income</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Add Income | Purity Finance
+{% endblock %}
 
-    <h1>Add Income</h1>
+{% block breadcrumb %}
+    Income / Add
+{% endblock %}
 
-    <form method="POST">
+{% block page_heading %}
+    Add Income
+{% endblock %}
 
-        <label for="amount">Amount</label>
-        <input
-            type="number"
-            id="amount"
-            name="amount"
-            step="0.01"
-            min="0"
-            required
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/forms.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-content form-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                INCOME
+            </p>
+
+            <h2>
+                Add Income
+            </h2>
+
+            <p class="page-description">
+                Record a new income and keep your finances organized.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('income.list_income') }}"
+            class="secondary-button"
         >
 
-        <br><br>
+            <i class="fa-solid fa-arrow-left"></i>
 
-        <label for="description">Description</label>
-        <input
-            type="text"
-            id="description"
-            name="description"
-            maxlength="255"
+            Back to Income
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         FORM CARD
+    ========================== -->
+
+    <div class="form-card">
+
+        <form
+            method="POST"
+            class="finance-form"
         >
 
-        <br><br>
+            <!-- =========================
+                 AMOUNT
+            ========================== -->
 
-        <label for="category_id">Category</label>
-        <select id="category_id" name="category_id" required>
+            <div class="form-group">
 
-            <option value="" disabled selected>
-                Select a category
-            </option>
+                <label for="amount">
+                    Amount
+                </label>
 
-            {% for category in categories %}
-                <option value="{{ category.id }}">
-                    {{ category.name }}
-                </option>
-            {% endfor %}
+                <div class="input-wrapper">
 
-        </select>
+                    <span class="input-prefix">
+                        ₹
+                    </span>
 
-        <br><br>
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        required
+                    >
 
-        <label for="date">Date</label>
-        <input
-            type="date"
-            id="date"
-            name="date"
-            required
-        >
+                </div>
 
-        <br><br>
+            </div>
 
-        <button type="submit">Add Income</button>
 
-    </form>
+            <!-- =========================
+                 DESCRIPTION
+            ========================== -->
 
-    <br>
+            <div class="form-group">
 
-    <a href="{{ url_for('income.list_income') }}">
-        Back to Income
-    </a>
+                <label for="description">
 
-</body>
-</html>
+                    Description
+
+                    <span class="optional">
+                        Optional
+                    </span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    maxlength="255"
+                    placeholder="e.g. Salary, freelance work, bonus..."
+                >
+
+            </div>
+
+
+            <!-- =========================
+                 CATEGORY
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="category_id">
+                    Category
+                </label>
+
+                <select
+                    id="category_id"
+                    name="category_id"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select a category
+                    </option>
+
+                    {% for category in categories %}
+
+                    <option value="{{ category.id }}">
+                        {{ category.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <p class="field-help">
+                    Choose the category that best describes this income.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 DATE
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('income.list_income') }}"
+                    class="secondary-button"
+                >
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Income
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

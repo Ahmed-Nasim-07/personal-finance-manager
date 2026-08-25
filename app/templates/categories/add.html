@@ -1,45 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Category</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Add Category | Purity Finance
+{% endblock %}
 
-    <h1>Add Category</h1>
+{% block breadcrumb %}
+    Categories / Add
+{% endblock %}
 
-    <form method="POST">
+{% block page_heading %}
+    Add Category
+{% endblock %}
 
-        <label for="name">Category Name</label>
-        <input
-            type="text"
-            id="name"
-            name="name"
-            required
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/forms.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-content form-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                CATEGORIES
+            </p>
+
+            <h2>
+                Add Category
+            </h2>
+
+            <p class="page-description">
+                Create a category to organize your financial transactions.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('categories.list_categories') }}"
+            class="secondary-button"
         >
 
-        <br><br>
+            <i class="fa-solid fa-arrow-left"></i>
 
-        <label for="type">Type</label>
+            Back to Categories
 
-        <select id="type" name="type" required>
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-        </select>
+        </a>
 
-        <br><br>
+    </div>
 
-        <button type="submit">Create Category</button>
 
-    </form>
+    <!-- =========================
+         FORM CARD
+    ========================== -->
 
-    <br>
+    <div class="form-card">
 
-    <a href="{{ url_for('categories.list_categories') }}">
-        Back to Categories
-    </a>
+        <form
+            method="POST"
+            class="finance-form"
+        >
 
-</body>
-</html>
+            <!-- =========================
+                 CATEGORY NAME
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Category Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    maxlength="100"
+                    placeholder="e.g. Food, Salary, Transport..."
+                    required
+                >
+
+                <p class="field-help">
+                    Give your category a clear and recognizable name.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 CATEGORY TYPE
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="type">
+                    Type
+                </label>
+
+                <select
+                    id="type"
+                    name="type"
+                    required
+                >
+
+                    <option
+                        value="expense"
+                        selected
+                    >
+                        Expense
+                    </option>
+
+                    <option value="income">
+                        Income
+                    </option>
+
+                </select>
+
+                <p class="field-help">
+                    Choose whether this category is used for income or expenses.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('categories.list_categories') }}"
+                    class="secondary-button"
+                >
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Create Category
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

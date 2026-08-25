@@ -1,38 +1,253 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Login</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Purity Finance</title>
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Auth CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/auth.css') }}"
+    >
+
 </head>
 
-<body>
 
-    <h1>Login</h1>
+<body class="auth-page">
 
-    <form method="POST">
 
-        <label for="email">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            required
-        >
+    <!-- =========================
+         BACKGROUND
+    ========================== -->
 
-        <br><br>
+    <div class="auth-background">
 
-        <label for="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-        >
+        <div class="auth-glow auth-glow-one"></div>
+        <div class="auth-glow auth-glow-two"></div>
 
-        <br><br>
+    </div>
 
-        <button type="submit">Login</button>
 
-    </form>
+    <!-- =========================
+         AUTH CONTAINER
+    ========================== -->
+
+    <main class="auth-container">
+
+
+        <!-- =========================
+             BRAND
+        ========================== -->
+
+        <div class="auth-brand">
+
+            <div class="auth-brand-icon">
+
+                <i class="fa-solid fa-wallet"></i>
+
+            </div>
+
+            <span>
+                Purity Finance
+            </span>
+
+        </div>
+
+
+        <!-- =========================
+             LOGIN CARD
+        ========================== -->
+
+        <div class="auth-card">
+
+
+            <!-- Header -->
+
+            <div class="auth-card-header">
+
+                <div class="auth-icon">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                </div>
+
+                <h1>
+                    Welcome back
+                </h1>
+
+                <p>
+                    Sign in to manage your finances.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 FLASH MESSAGES
+            ========================== -->
+
+            {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                    <div class="auth-messages">
+
+                        {% for message in messages %}
+
+                            <div class="auth-message">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                <span>
+                                    {{ message }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- =========================
+                 LOGIN FORM
+            ========================== -->
+
+            <form
+                method="POST"
+                class="auth-form"
+            >
+
+
+                <!-- Email -->
+
+                <div class="auth-form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <div class="auth-input-wrapper">
+
+                        <i class="fa-regular fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="auth-form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="auth-input-wrapper">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                >
+
+                    <span>
+                        Login
+                    </span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- =========================
+                 REGISTER LINK
+            ========================== -->
+
+            <div class="auth-footer">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="{{ url_for('auth.register') }}">
+                    Create one
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <p class="auth-copyright">
+            © 2026 Purity Finance. Manage your money with clarity.
+        </p>
+
+
+    </main>
 
 </body>
 </html>

@@ -1,45 +1,255 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Categories | Purity Finance
+{% endblock %}
 
-    <h1>Categories</h1>
+{% block breadcrumb %}
+    Categories
+{% endblock %}
 
-    <a href="{{ url_for('categories.add_category') }}">
-        Add Category
-    </a>
+{% block page_heading %}
+    Categories
+{% endblock %}
 
-    <hr>
+{% block extra_css %}
 
-    {% if categories %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
 
-        <ul>
-            {% for category in categories %}
-                <li>
-                    {{ category.name }} - {{ category.type }}
-                
-                    <a href="{{ url_for('categories.edit_category', category_id=category.id) }}">
-                        Edit
-                    </a>
-                
-                    <form method="POST" action="{{ url_for('categories.delete_category', category_id=category.id) }}"
-                        style="display: inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/categories.css') }}"
+>
 
-    {% else %}
+{% endblock %}
 
-        <p>You don't have any categories yet.</p>
 
-    {% endif %}
+{% block content %}
 
-</body>
-</html>
+<section class="page-content categories-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                ORGANIZATION
+            </p>
+
+            <h2>
+                Categories
+            </h2>
+
+            <p class="page-description">
+                Organize your income and expenses with custom categories.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('categories.add_category') }}"
+            class="primary-button"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Category
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         CATEGORY CARD
+    ========================== -->
+
+    <div class="transaction-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+                    Your Categories
+                </h3>
+
+                <p>
+                    Manage the categories used throughout your finances.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if categories %}
+
+            <!-- =========================
+                 CATEGORY LIST
+            ========================== -->
+
+            <div class="categories-list">
+
+                {% for category in categories %}
+
+                    <div class="category-row">
+
+                        <!-- Category information -->
+
+                        <div class="category-info">
+
+                            <div class="category-icon">
+
+                                {% if category.type == "income" %}
+
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                                {% else %}
+
+                                    <i class="fa-solid fa-arrow-trend-down"></i>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div>
+
+                                <span class="category-name">
+                                    {{ category.name }}
+                                </span>
+
+                                <span class="category-type">
+
+                                    {{ category.type|capitalize }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Category type -->
+
+                        <div class="category-type-badge
+                            {% if category.type == 'income' %}
+                                category-income
+                            {% else %}
+                                category-expense
+                            {% endif %}
+                        ">
+
+                            {% if category.type == "income" %}
+
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+
+                                Income
+
+                            {% else %}
+
+                                <i class="fa-solid fa-arrow-trend-down"></i>
+
+                                Expense
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Actions -->
+
+                        <div class="transaction-actions">
+
+                            <a
+                                href="{{ url_for('categories.edit_category', category_id=category.id) }}"
+                                class="table-action edit-action"
+                                title="Edit category"
+                            >
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('categories.delete_category', category_id=category.id) }}"
+                                onsubmit="return confirm('Are you sure you want to delete this category?');"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="table-action delete-action"
+                                    title="Delete category"
+                                >
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- =========================
+                 EMPTY STATE
+            ========================== -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon category-empty-icon">
+
+                    <i class="fa-solid fa-tags"></i>
+
+                </div>
+
+
+                <h3>
+                    No categories yet
+                </h3>
+
+
+                <p>
+                    Create categories to organize your income and expenses.
+                </p>
+
+
+                <a
+                    href="{{ url_for('categories.add_category') }}"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Your First Category
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

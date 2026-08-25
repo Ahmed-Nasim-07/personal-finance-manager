@@ -1,4 +1,4 @@
-from flask import (Blueprint, render_template, request, redirect, url_for, session)
+from flask import (Blueprint, render_template, request, redirect, url_for, session, flash)
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
@@ -21,14 +21,24 @@ def register():
         password = request.form.get("password")
 
         if not username or not email or not password:
-            return "All fields are required", 400
+            flash("All fields are required.", "error")
+            return render_template("auth/register.html")
 
-        existing_user = User.query.filter_by(
+        existing_email = User.query.filter_by(
             email=email
         ).first()
 
-        if existing_user:
-            return "Email already registered", 400
+        if existing_email:
+            flash("Email already registered.", "error")
+            return render_template("auth/register.html")
+
+        existing_username = User.query.filter_by(
+            username=username
+        ).first()
+
+        if existing_username:
+            flash("Username already taken.", "error")
+            return render_template("auth/register.html")
 
         password_hash = generate_password_hash(password)
 
@@ -41,6 +51,8 @@ def register():
         db.session.add(user)
         db.session.commit()
 
+        flash("Account created successfully. You can now log in.", "success")
+
         return redirect(url_for("auth.register"))
 
     return render_template("auth/register.html")
@@ -52,15 +64,18 @@ def login():
         password = request.form.get("password")
 
         if not email or not password:
-            return "Email and password are required", 400
+            flash("Email and password are required.", "error")
+            return render_template("auth/login.html")
 
         user = User.query.filter_by(email=email).first()
 
         if not user:
-            return "Invalid email or password", 401
+            flash("Invalid email or password.", "error")
+            return render_template("auth/login.html")
 
         if not check_password_hash(user.password_hash, password):
-            return "Invalid email or password", 401
+            flash("Invalid email or password.", "error")
+            return render_template("auth/login.html")
 
         session["user_id"] = user.id
 

@@ -1,59 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Category</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Edit Category | Purity Finance
+{% endblock %}
 
-    <h1>Edit Category</h1>
+{% block breadcrumb %}
+    Categories / Edit
+{% endblock %}
 
-    <form method="POST">
+{% block page_heading %}
+    Edit Category
+{% endblock %}
 
-        <label for="name">Category Name</label>
-        <input
-            type="text"
-            id="name"
-            name="name"
-            value="{{ category.name }}"
-            required
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/forms.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-content form-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                CATEGORIES
+            </p>
+
+            <h2>
+                Edit Category
+            </h2>
+
+            <p class="page-description">
+                Update the name or type of this category.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('categories.list_categories') }}"
+            class="secondary-button"
         >
 
-        <br><br>
+            <i class="fa-solid fa-arrow-left"></i>
 
-        <label for="type">Type</label>
+            Back to Categories
 
-        <select id="type" name="type" required>
+        </a>
 
-            <option
-                value="expense"
-                {% if category.type == "expense" %}selected{% endif %}
-            >
-                Expense
-            </option>
+    </div>
 
-            <option
-                value="income"
-                {% if category.type == "income" %}selected{% endif %}
-            >
-                Income
-            </option>
 
-        </select>
+    <!-- =========================
+         FORM CARD
+    ========================== -->
 
-        <br><br>
+    <div class="form-card">
 
-        <button type="submit">Save Changes</button>
+        <form
+            method="POST"
+            class="finance-form"
+        >
 
-    </form>
+            <!-- =========================
+                 CATEGORY NAME
+            ========================== -->
 
-    <br>
+            <div class="form-group">
 
-    <a href="{{ url_for('categories.list_categories') }}">
-        Cancel
-    </a>
+                <label for="name">
+                    Category Name
+                </label>
 
-</body>
-</html>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ category.name }}"
+                    maxlength="100"
+                    placeholder="e.g. Food, Salary, Transport..."
+                    required
+                >
+
+                <p class="field-help">
+                    Give your category a clear and recognizable name.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 CATEGORY TYPE
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="type">
+                    Type
+                </label>
+
+                <select
+                    id="type"
+                    name="type"
+                    required
+                >
+
+                    <option
+                        value="expense"
+                        {% if category.type == "expense" %}
+                            selected
+                        {% endif %}
+                    >
+                        Expense
+                    </option>
+
+                    <option
+                        value="income"
+                        {% if category.type == "income" %}
+                            selected
+                        {% endif %}
+                    >
+                        Income
+                    </option>
+
+                </select>
+
+                <p class="field-help">
+                    Choose whether this category is used for income or expenses.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('categories.list_categories') }}"
+                    class="secondary-button"
+                >
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

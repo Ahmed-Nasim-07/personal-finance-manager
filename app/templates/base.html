@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}Purity Finance{% endblock %}
+    </title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- FontAwesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Shared CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/base.css') }}"
+    >
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+
+            <a
+                href="{{ url_for('main.home') }}"
+                class="brand"
+            >
+                <span class="brand-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </span>
+
+                <span class="brand-name">
+                    Purity Finance
+                </span>
+            </a>
+
+            <button
+                class="sidebar-close"
+                id="sidebarClose"
+                aria-label="Close navigation"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-section-title">
+                MAIN
+            </p>
+
+
+            <a
+                href="{{ url_for('main.home') }}"
+                class="nav-item
+                {% if request.endpoint == 'main.home' %}
+                    active
+                {% endif %}"
+            >
+                <span class="nav-icon">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </span>
+
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('expenses.list_expenses') }}"
+                class="nav-item
+                {% if request.endpoint.startswith('expenses.') %}
+                    active
+                {% endif %}"
+            >
+                <span class="nav-icon">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                </span>
+
+                <span>Expenses</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('income.list_income') }}"
+                class="nav-item
+                {% if request.endpoint.startswith('income.') %}
+                    active
+                {% endif %}"
+            >
+                <span class="nav-icon">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                </span>
+
+                <span>Income</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('categories.list_categories') }}"
+                class="nav-item
+                {% if request.endpoint.startswith('categories.') %}
+                    active
+                {% endif %}"
+            >
+                <span class="nav-icon">
+                    <i class="fa-solid fa-layer-group"></i>
+                </span>
+
+                <span>Categories</span>
+            </a>
+
+
+            <p class="nav-section-title nav-section-spaced">
+                ACCOUNT
+            </p>
+
+
+            <a
+                href="#"
+                class="nav-item"
+            >
+                <span class="nav-icon">
+                    <i class="fa-solid fa-user"></i>
+                </span>
+
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-tip">
+
+                <div class="tip-icon">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+
+                <div>
+                    <strong>Stay on track</strong>
+
+                    <p>
+                        Keep an eye on your spending.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Mobile overlay -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="breadcrumb-area">
+
+                <div class="breadcrumb">
+
+                    <span>Pages</span>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                    <strong>
+                        {% block breadcrumb %}
+                            Dashboard
+                        {% endblock %}
+                    </strong>
+
+                </div>
+
+                <h1>
+                    {% block page_heading %}
+                        Dashboard
+                    {% endblock %}
+                </h1>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <!-- Search -->
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        placeholder="Search..."
+                        aria-label="Search"
+                    >
+
+                </div>
+
+
+                <!-- Theme -->
+
+                <button
+                    class="icon-button"
+                    id="themeToggle"
+                    aria-label="Toggle theme"
+                >
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+
+
+                <!-- Notifications -->
+
+                <button
+                    class="icon-button notification-button"
+                    aria-label="Notifications"
+                >
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-dot"></span>
+                </button>
+
+
+                <!-- User -->
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="user-info">
+
+                        <span class="user-name">
+                            Ahmed
+                        </span>
+
+                        <span class="user-role">
+                            Account
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Mobile menu -->
+
+                <button
+                    class="mobile-menu-button"
+                    id="sidebarOpen"
+                    aria-label="Open navigation"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             PAGE CONTENT
+        ========================== -->
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+
+<!-- Shared JavaScript -->
+
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

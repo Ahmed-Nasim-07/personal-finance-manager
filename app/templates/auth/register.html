@@ -1,48 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Register</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | Purity Finance</title>
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Auth CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/auth.css') }}"
+    >
+
 </head>
 
-<body>
 
-    <h1>Create Account</h1>
+<body class="auth-page">
 
-    <form method="POST">
 
-        <label for="username">Username</label>
-        <input
-            type="text"
-            id="username"
-            name="username"
-            required
-        >
+    <!-- =========================
+         BACKGROUND
+    ========================== -->
 
-        <br><br>
+    <div class="auth-background">
 
-        <label for="email">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            required
-        >
+        <div class="auth-glow auth-glow-one"></div>
+        <div class="auth-glow auth-glow-two"></div>
 
-        <br><br>
+    </div>
 
-        <label for="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-        >
 
-        <br><br>
+    <!-- =========================
+         AUTH CONTAINER
+    ========================== -->
 
-        <button type="submit">Register</button>
+    <main class="auth-container">
 
-    </form>
+
+        <!-- =========================
+             BRAND
+        ========================== -->
+
+        <div class="auth-brand">
+
+            <div class="auth-brand-icon">
+
+                <i class="fa-solid fa-wallet"></i>
+
+            </div>
+
+            <span>
+                Purity Finance
+            </span>
+
+        </div>
+
+
+        <!-- =========================
+             REGISTER CARD
+        ========================== -->
+
+        <div class="auth-card">
+
+
+            <!-- Header -->
+
+            <div class="auth-card-header">
+
+                <div class="auth-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+                <h1>
+                    Create your account
+                </h1>
+
+                <p>
+                    Start managing your finances with clarity.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 FLASH MESSAGES
+            ========================== -->
+
+            {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                    <div class="auth-messages">
+
+                        {% for category, message in get_flashed_messages(with_categories=true) %}
+                        
+                        <div class="auth-message auth-message-{{ category }}">
+                        
+                            {% if category == "success" %}
+                            <i class="fa-solid fa-circle-check"></i>
+                            {% else %}
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            {% endif %}
+                        
+                            <span>
+                                {{ message }}
+                            </span>
+                        
+                        </div>
+                        
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- =========================
+                 REGISTER FORM
+            ========================== -->
+
+            <form
+                method="POST"
+                class="auth-form"
+            >
+
+
+                <!-- Username -->
+
+                <div class="auth-form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="auth-input-wrapper">
+
+                        <i class="fa-regular fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Choose a username"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="auth-form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <div class="auth-input-wrapper">
+
+                        <i class="fa-regular fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="auth-form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="auth-input-wrapper">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                >
+
+                    <span>
+                        Create Account
+                    </span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- =========================
+                 LOGIN LINK
+            ========================== -->
+
+            <div class="auth-footer">
+
+                <span>
+                    Already have an account?
+                </span>
+
+                <a href="{{ url_for('auth.login') }}">
+                    Login
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <p class="auth-copyright">
+            © 2026 Purity Finance. Manage your money with clarity.
+        </p>
+
+
+    </main>
 
 </body>
 </html>

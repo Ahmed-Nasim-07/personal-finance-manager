@@ -1,48 +1,363 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Income | Purity Finance
+{% endblock %}
 
-    <h1>Income</h1>
+{% block breadcrumb %}
+    Income
+{% endblock %}
 
-    <a href="{{ url_for('income.add_income') }}">Add Income</a>
+{% block page_heading %}
+    Income
+{% endblock %}
 
-    <br><br>
+{% block extra_css %}
 
-    {% if income %}
-        <ul>
-            {% for item in income %}
-                <li>
-                    <strong>{{ item.amount }}</strong>
-                    -
-                    {{ item.description or "No description" }}
-                    -
-                    {{ item.category.name }}
-                    -
-                    {{ item.date }}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
 
-                    <a href="{{ url_for('income.edit_income', income_id=item.id) }}">
-                        Edit
-                    </a>
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/income.css') }}"
+>
 
-                    <form
-                        method="POST"
-                        action="{{ url_for('income.delete_income', income_id=item.id) }}"
-                        style="display: inline;"
-                    >
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No income recorded yet.</p>
-    {% endif %}
+{% endblock %}
 
-</body>
-</html>
+
+{% block content %}
+
+<section class="page-content income-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                TRANSACTIONS
+            </p>
+
+            <h2>
+                Income
+            </h2>
+
+            <p class="page-description">
+                Track and manage all the money coming into your account.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('income.add_income') }}"
+            class="primary-button"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Income
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         INCOME SUMMARY
+    ========================== -->
+
+    <div class="transaction-summary">
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+
+                <i class="fa-solid fa-wallet"></i>
+
+            </div>
+
+            <div>
+
+                <span class="summary-label">
+                    Total Records
+                </span>
+
+                <strong>
+                    {{ income|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon income-summary-icon-positive">
+
+                <i class="fa-solid fa-arrow-trend-up"></i>
+
+            </div>
+
+            <div>
+
+                <span class="summary-label">
+                    Transactions
+                </span>
+
+                <strong>
+                    {{ income|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         INCOME LIST CARD
+    ========================== -->
+
+    <div class="transaction-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+                    All Income
+                </h3>
+
+                <p>
+                    Your recorded income
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if income %}
+
+            <!-- =========================
+                 INCOME TABLE
+            ========================== -->
+
+            <div class="table-wrapper">
+
+                <table class="transaction-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in income %}
+
+                            <tr>
+
+                                <!-- Description -->
+
+                                <td>
+
+                                    <div class="transaction-description">
+
+                                        <div class="transaction-icon income-icon">
+
+                                            <i class="fa-solid fa-arrow-trend-up"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <span class="transaction-name">
+
+                                                {{ item.description or "No description" }}
+
+                                            </span>
+
+                                            <span class="transaction-id">
+
+                                                Income #{{ item.id }}
+
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Category -->
+
+                                <td>
+
+                                    <span class="category-badge">
+
+                                        <i class="fa-solid fa-tag"></i>
+
+                                        {{ item.category.name }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Date -->
+
+                                <td>
+
+                                    <span class="transaction-date">
+
+                                        <i class="fa-regular fa-calendar"></i>
+
+                                        {{ item.date }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Amount -->
+
+                                <td>
+
+                                    <span class="income-amount">
+
+                                        +₹{{ item.amount }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td>
+
+                                    <div class="transaction-actions">
+
+                                        <a
+                                            href="{{ url_for('income.edit_income', income_id=item.id) }}"
+                                            class="table-action edit-action"
+                                            title="Edit income"
+                                        >
+
+                                            <i class="fa-solid fa-pen"></i>
+
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('income.delete_income', income_id=item.id) }}"
+                                            onsubmit="return confirm('Are you sure you want to delete this income?');"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="table-action delete-action"
+                                                title="Delete income"
+                                            >
+
+                                                <i class="fa-solid fa-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <!-- =========================
+                 EMPTY STATE
+            ========================== -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon income-empty-icon">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                </div>
+
+
+                <h3>
+                    No income yet
+                </h3>
+
+
+                <p>
+                    Start tracking your money by adding your first income record.
+                </p>
+
+
+                <a
+                    href="{{ url_for('income.add_income') }}"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Your First Income
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

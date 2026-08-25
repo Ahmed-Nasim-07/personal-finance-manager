@@ -1,0 +1,268 @@
+/* =========================================================
+   PURITY FINANCE — CATEGORIES PAGE
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE LAYOUT
+   ========================================================= */
+
+.categories-page {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 34px 38px 50px;
+}
+
+
+/* =========================================================
+   CATEGORY LIST
+   ========================================================= */
+
+.categories-list {
+    width: 100%;
+}
+
+
+/* =========================================================
+   CATEGORY ROW
+   ========================================================= */
+
+.category-row {
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 16px 26px;
+
+    border-top: 1px solid var(--border);
+
+    transition:
+        background var(--transition-fast);
+}
+
+
+.category-row:hover {
+    background: var(--surface-hover);
+}
+
+
+/* =========================================================
+   CATEGORY INFORMATION
+   ========================================================= */
+
+.category-info {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: var(--teal-soft);
+
+    color: var(--teal-light);
+
+    font-size: 13px;
+}
+
+
+.category-name {
+    display: block;
+
+    color: var(--text-primary);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.category-type {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   CATEGORY TYPE BADGE
+   ========================================================= */
+
+.category-type-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    min-width: 88px;
+
+    padding: 7px 11px;
+
+    border-radius: 7px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.category-type-badge i {
+    font-size: 8px;
+}
+
+
+.category-income {
+    background: var(--teal-soft);
+
+    color: var(--teal-light);
+}
+
+
+.category-expense {
+    background: var(--expense-soft);
+
+    color: var(--expense);
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.category-row .transaction-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.category-row .transaction-actions form {
+    margin: 0;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.category-empty-icon {
+    background: var(--teal-soft);
+
+    color: var(--teal-light);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .categories-page {
+        padding: 30px 25px 45px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .categories-page {
+        padding: 25px 18px 40px;
+    }
+
+
+    .category-row {
+        gap: 12px;
+
+        padding: 15px 18px;
+    }
+
+
+    .category-type-badge {
+        min-width: auto;
+
+        padding: 7px 9px;
+    }
+
+
+    .category-type-badge i {
+        margin: 0;
+    }
+
+
+    .category-type-badge {
+        font-size: 0;
+    }
+
+
+    .category-type-badge i {
+        font-size: 10px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .categories-page {
+        padding: 20px 14px 30px;
+    }
+
+
+    .category-row {
+        flex-wrap: wrap;
+
+        padding: 15px;
+    }
+
+
+    .category-info {
+        flex: 1 1 calc(100% - 55px);
+    }
+
+
+    .category-type-badge {
+        order: 3;
+    }
+
+
+    .category-row .transaction-actions {
+        margin-left: auto;
+    }
+
+}

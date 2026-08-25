@@ -1,15 +1,531 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Personal Finance Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+    Dashboard | Purity Finance
+{% endblock %}
 
-    <h1>Personal Finance Manager</h1>
+{% block breadcrumb %}
+    Dashboard
+{% endblock %}
 
-    <p>Track your income and expenses easily.</p>
+{% block page_heading %}
+    Dashboard
+{% endblock %}
 
-</body>
-</html>
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-content">
+
+    <!-- =========================
+         WELCOME
+    ========================== -->
+
+    <div class="welcome-section">
+
+        <div>
+
+            <p class="eyebrow">
+                FINANCIAL OVERVIEW
+            </p>
+
+            <h2>
+                Welcome back, Ahmed
+            </h2>
+
+            <p class="welcome-text">
+                Here's what's happening with your finances.
+            </p>
+
+        </div>
+
+
+        <div class="date-display">
+
+            <i class="fa-regular fa-calendar"></i>
+
+            <span>
+                Overview
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUMMARY CARDS
+    ========================== -->
+
+    <div class="summary-grid">
+
+        <!-- Balance -->
+
+        <div class="summary-card balance-card">
+
+            <div class="summary-card-top">
+
+                <span class="summary-label">
+                    Total Balance
+                </span>
+
+                <div class="summary-icon balance-icon">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-value">
+                ₹{{ balance }}
+            </div>
+
+
+            <div class="summary-footer">
+
+                <span class="positive-indicator">
+
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                </span>
+
+                <span>
+                    Available balance
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Income -->
+
+        <div class="summary-card">
+
+            <div class="summary-card-top">
+
+                <span class="summary-label">
+                    Total Income
+                </span>
+
+                <div class="summary-icon income-icon">
+
+                    <i class="fa-solid fa-arrow-down"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-value">
+                ₹{{ total_income }}
+            </div>
+
+
+            <div class="summary-footer">
+
+                <span class="positive-indicator">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </span>
+
+                <span>
+                    Total earned
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Expenses -->
+
+        <div class="summary-card">
+
+            <div class="summary-card-top">
+
+                <span class="summary-label">
+                    Total Expenses
+                </span>
+
+                <div class="summary-icon expense-icon">
+
+                    <i class="fa-solid fa-arrow-up"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-value">
+                ₹{{ total_expenses }}
+            </div>
+
+
+            <div class="summary-footer">
+
+                <span class="negative-indicator">
+
+                    <i class="fa-solid fa-minus"></i>
+
+                </span>
+
+                <span>
+                    Total spent
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RECENT TRANSACTIONS
+    ========================== -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- =========================
+             RECENT EXPENSES
+        ========================== -->
+
+        <section class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <p class="card-eyebrow">
+                        SPENDING
+                    </p>
+
+                    <h3>
+                        Recent Expenses
+                    </h3>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('expenses.list_expenses') }}"
+                    class="card-action"
+                >
+                    View all
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            {% if recent_expenses %}
+
+                <div class="transaction-list">
+
+                    {% for expense in recent_expenses %}
+
+                        <div class="transaction-row">
+
+                            <div class="transaction-main">
+
+                                <div class="transaction-icon expense-transaction-icon">
+
+                                    <i class="fa-solid fa-arrow-trend-down"></i>
+
+                                </div>
+
+
+                                <div class="transaction-details">
+
+                                    <span class="transaction-name">
+
+                                        {{ expense.description or "Expense" }}
+
+                                    </span>
+
+
+                                    <span class="transaction-meta">
+
+                                        {{ expense.category.name }}
+
+                                        <span class="dot-separator">
+                                            •
+                                        </span>
+
+                                        {{ expense.date }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="transaction-amount expense-amount">
+
+                                -₹{{ expense.amount }}
+
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-solid fa-receipt"></i>
+
+                    </div>
+
+
+                    <h4>
+                        No expenses yet
+                    </h4>
+
+
+                    <p>
+                        Your recent expenses will appear here.
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('expenses.add_expense') }}"
+                        class="primary-button"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Expense
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =========================
+             RECENT INCOME
+        ========================== -->
+
+        <section class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <p class="card-eyebrow">
+                        EARNINGS
+                    </p>
+
+                    <h3>
+                        Recent Income
+                    </h3>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('income.list_income') }}"
+                    class="card-action"
+                >
+
+                    View all
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            {% if recent_income %}
+
+                <div class="transaction-list">
+
+                    {% for item in recent_income %}
+
+                        <div class="transaction-row">
+
+                            <div class="transaction-main">
+
+                                <div class="transaction-icon income-transaction-icon">
+
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                                </div>
+
+
+                                <div class="transaction-details">
+
+                                    <span class="transaction-name">
+
+                                        {{ item.description or "Income" }}
+
+                                    </span>
+
+
+                                    <span class="transaction-meta">
+
+                                        {{ item.category.name }}
+
+                                        <span class="dot-separator">
+                                            •
+                                        </span>
+
+                                        {{ item.date }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="transaction-amount income-amount">
+
+                                +₹{{ item.amount }}
+
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-solid fa-wallet"></i>
+
+                    </div>
+
+
+                    <h4>
+                        No income yet
+                    </h4>
+
+
+                    <p>
+                        Your recent income will appear here.
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('income.add_income') }}"
+                        class="primary-button"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Income
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================
+         QUICK ACTIONS
+    ========================== -->
+
+    <section class="quick-actions-card">
+
+        <div class="quick-actions-content">
+
+            <div>
+
+                <p class="card-eyebrow">
+                    QUICK ACTIONS
+                </p>
+
+                <h3>
+                    Manage your finances
+                </h3>
+
+                <p>
+                    Quickly add a transaction or manage your categories.
+                </p>
+
+            </div>
+
+
+            <div class="quick-actions-buttons">
+
+                <a
+                    href="{{ url_for('expenses.add_expense') }}"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-minus"></i>
+
+                    Add Expense
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('income.add_income') }}"
+                    class="secondary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Income
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('categories.list_categories') }}"
+                    class="secondary-button"
+                >
+
+                    <i class="fa-solid fa-layer-group"></i>
+
+                    Categories
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+{% endblock %}
