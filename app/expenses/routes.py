@@ -1,6 +1,7 @@
 from datetime import date
+from decimal import Decimal, InvalidOperation
 
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.auth.utils import login_required
 from app.extensions import db
 from app.models.expense import Expense
@@ -29,14 +30,40 @@ def list_expenses():
 @expenses.route("/add", methods=["GET", "POST"])
 @login_required
 def add_expense():
+
+    categories = Category.query.filter_by(
+        user_id=session["user_id"],
+        type="expense"
+    ).order_by(Category.name.asc()).all()
+
     if request.method == "POST":
         amount = request.form.get("amount")
         description = request.form.get("description")
         expense_date = request.form.get("date")
         category_id = request.form.get("category_id")
 
-        if not amount or not expense_date or not category_id:
-            return "Amount, date and category are required", 400
+        if not amount:
+            flash("Amount is required.", "error")
+            return render_template(
+                "expenses/add.html",
+                categories=categories
+            )
+
+        try:
+            amount = Decimal(amount)
+        except InvalidOperation:
+            flash("Please enter a valid amount.", "error")
+            return render_template(
+                "expenses/add.html",
+                categories=categories
+            )
+
+        if amount <= 0:
+            flash("Amount must be greater than zero.", "error")
+            return render_template(
+                "expenses/add.html",
+                categories=categories
+            )
 
         category = Category.query.filter_by(
             id=category_id,
@@ -45,13 +72,26 @@ def add_expense():
         ).first()
 
         if not category:
-            return "Invalid category", 400
+            flash("Invalid category.", "error")
+            return render_template(
+                "expenses/add.html",
+                categories=categories
+            )
+
+        try:
+            expense_date = date.fromisoformat(expense_date)
+        except (ValueError, TypeError):
+            flash("Please enter a valid date.", "error")
+            return render_template(
+                "expenses/add.html",
+                categories=categories
+            )
 
         expense = Expense(
             user_id=session["user_id"],
             amount=amount,
             description=description,
-            date=date.fromisoformat(expense_date),
+            date=expense_date,
             category_id=category.id,
         )
 
@@ -59,11 +99,6 @@ def add_expense():
         db.session.commit()
 
         return redirect(url_for("expenses.list_expenses"))
-
-    categories = Category.query.filter_by(
-        user_id=session["user_id"],
-        type="expense"
-    ).order_by(Category.name.asc()).all()
 
     return render_template(
         "expenses/add.html",
@@ -78,14 +113,42 @@ def edit_expense(expense_id):
         user_id=session["user_id"]
     ).first_or_404()
 
+    categories = Category.query.filter_by(
+        user_id=session["user_id"],
+        type="expense"
+    ).order_by(Category.name.asc()).all()
+
     if request.method == "POST":
         amount = request.form.get("amount")
         description = request.form.get("description")
         expense_date = request.form.get("date")
         category_id = request.form.get("category_id")
 
-        if not amount or not expense_date or not category_id:
-            return "Amount, date and category are required", 400
+        if not amount:
+            flash("Amount is required.", "error")
+            return render_template(
+                "expenses/edit.html",
+                expense=expense,
+                categories=categories
+            )
+
+        try:
+            amount = Decimal(amount)
+        except InvalidOperation:
+            flash("Please enter a valid amount.", "error")
+            return render_template(
+                "expenses/edit.html",
+                expense=expense,
+                categories=categories
+            )
+
+        if amount <= 0:
+            flash("Amount must be greater than zero.", "error")
+            return render_template(
+                "expenses/edit.html",
+                expense=expense,
+                categories=categories
+            )
 
         category = Category.query.filter_by(
             id=category_id,
@@ -94,21 +157,31 @@ def edit_expense(expense_id):
         ).first()
 
         if not category:
-            return "Invalid category", 400
+            flash("Invalid category.", "error")
+            return render_template(
+                "expenses/edit.html",
+                expense=expense,
+                categories=categories
+            )
+
+        try:
+            expense_date = date.fromisoformat(expense_date)
+        except (ValueError, TypeError):
+            flash("Please enter a valid date.", "error")
+            return render_template(
+                "expenses/edit.html",
+                expense=expense,
+                categories=categories
+            )
 
         expense.amount = amount
         expense.description = description
-        expense.date = date.fromisoformat(expense_date)
+        expense.date = expense_date
         expense.category_id = category.id
 
         db.session.commit()
 
         return redirect(url_for("expenses.list_expenses"))
-
-    categories = Category.query.filter_by(
-        user_id=session["user_id"],
-        type="expense"
-    ).order_by(Category.name.asc()).all()
 
     return render_template(
         "expenses/edit.html",
@@ -126,5 +199,7 @@ def delete_expense(expense_id):
 
     db.session.delete(expense)
     db.session.commit()
+
+    flash("Expense deleted successfully.", "success")
 
     return redirect(url_for("expenses.list_expenses"))

@@ -144,6 +144,37 @@
 
         </div>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        
+        {% if messages %}
+        
+        <div class="flash-messages">
+        
+            {% for category, message in messages %}
+        
+            <div class="flash-message flash-{{ category }}">
+        
+                <i class="fa-solid
+                                {% if category == 'success' %}
+                                    fa-circle-check
+                                {% else %}
+                                    fa-circle-exclamation
+                                {% endif %}
+                            "></i>
+        
+                <span>
+                    {{ message }}
+                </span>
+        
+            </div>
+        
+            {% endfor %}
+        
+        </div>
+        
+        {% endif %}
+        
+        {% endwith %}
 
         {% if expenses %}
 

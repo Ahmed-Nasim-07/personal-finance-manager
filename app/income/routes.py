@@ -1,6 +1,7 @@
 from datetime import date
+from decimal import Decimal, InvalidOperation
 
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 
 from app.auth.utils import login_required
 from app.extensions import db
@@ -31,14 +32,40 @@ def list_income():
 @income_bp.route("/add", methods=["GET", "POST"])
 @login_required
 def add_income():
+
+    categories = Category.query.filter_by(
+        user_id=session["user_id"],
+        type="income"
+    ).order_by(Category.name.asc()).all()
+
     if request.method == "POST":
         amount = request.form.get("amount")
         description = request.form.get("description")
         income_date = request.form.get("date")
         category_id = request.form.get("category_id")
 
-        if not amount or not income_date or not category_id:
-            return "Amount, date and category are required", 400
+        if not amount:
+            flash("Amount is required.", "error")
+            return render_template(
+                "income/add.html",
+                categories=categories
+            )
+
+        try:
+            amount = Decimal(amount)
+        except InvalidOperation:
+            flash("Please enter a valid amount.", "error")
+            return render_template(
+                "income/add.html",
+                categories=categories
+            )
+
+        if amount <= 0:
+            flash("Amount must be greater than zero.", "error")
+            return render_template(
+                "income/add.html",
+                categories=categories
+            )
 
         category = Category.query.filter_by(
             id=category_id,
@@ -47,13 +74,26 @@ def add_income():
         ).first()
 
         if not category:
-            return "Invalid category", 400
+            flash("Invalid category.", "error")
+            return render_template(
+                "income/add.html",
+                categories=categories
+            )
+
+        try:
+            income_date = date.fromisoformat(income_date)
+        except (ValueError, TypeError):
+            flash("Please enter a valid date.", "error")
+            return render_template(
+                "income/add.html",
+                categories=categories
+            )
 
         income = Income(
             user_id=session["user_id"],
             amount=amount,
             description=description,
-            date=date.fromisoformat(income_date),
+            date=income_date,
             category_id=category.id,
         )
 
@@ -62,10 +102,6 @@ def add_income():
 
         return redirect(url_for("income.list_income"))
 
-    categories = Category.query.filter_by(
-        user_id=session["user_id"],
-        type="income"
-    ).order_by(Category.name.asc()).all()
 
     return render_template(
         "income/add.html",
@@ -81,14 +117,42 @@ def edit_income(income_id):
         user_id=session["user_id"]
     ).first_or_404()
 
+    categories = Category.query.filter_by(
+        user_id=session["user_id"],
+        type="income"
+    ).order_by(Category.name.asc()).all()
+
     if request.method == "POST":
         amount = request.form.get("amount")
         description = request.form.get("description")
         income_date = request.form.get("date")
         category_id = request.form.get("category_id")
 
-        if not amount or not income_date or not category_id:
-            return "Amount, date and category are required", 400
+        if not amount:
+            flash("Amount is required.", "error")
+            return render_template(
+                "income/edit.html",
+                income=income,
+                categories=categories
+            )
+
+        try:
+            amount = Decimal(amount)
+        except InvalidOperation:
+            flash("Please enter a valid amount.", "error")
+            return render_template(
+                "income/edit.html",
+                income=income,
+                categories=categories
+            )
+
+        if amount <= 0:
+            flash("Amount must be greater than zero.", "error")
+            return render_template(
+                "income/edit.html",
+                income=income,
+                categories=categories
+            )
 
         category = Category.query.filter_by(
             id=category_id,
@@ -97,21 +161,32 @@ def edit_income(income_id):
         ).first()
 
         if not category:
-            return "Invalid category", 400
+            flash("Invalid category.", "error")
+            return render_template(
+                "income/edit.html",
+                income=income,
+                categories=categories
+            )
+
+        try:
+            income_date = date.fromisoformat(income_date)
+        except (ValueError, TypeError):
+            flash("Please enter a valid date.", "error")
+            return render_template(
+                "income/edit.html",
+                income=income,
+                categories=categories
+            )
 
         income.amount = amount
         income.description = description
-        income.date = date.fromisoformat(income_date)
+        income.date = income_date
         income.category_id = category.id
 
         db.session.commit()
 
         return redirect(url_for("income.list_income"))
 
-    categories = Category.query.filter_by(
-        user_id=session["user_id"],
-        type="income"
-    ).order_by(Category.name.asc()).all()
 
     return render_template(
         "income/edit.html",
@@ -130,5 +205,7 @@ def delete_income(income_id):
 
     db.session.delete(income)
     db.session.commit()
+
+    flash("Income deleted successfully.", "success")
 
     return redirect(url_for("income.list_income"))
