@@ -19,13 +19,105 @@ income_bp = Blueprint(
 @income_bp.route("/")
 @login_required
 def list_income():
-    income_list = Income.query.filter_by(
+
+    search = request.args.get("search", "").strip()
+    category_id = request.args.get("category_id")
+    from_date = request.args.get("from_date")
+    to_date = request.args.get("to_date")
+    min_amount = request.args.get("min_amount") or None
+    max_amount = request.args.get("max_amount") or None
+
+    filters_applied = any([
+        search,
+        category_id,
+        from_date,
+        to_date,
+        min_amount,
+        max_amount
+    ])
+
+    query = Income.query.filter_by(
         user_id=session["user_id"]
-    ).order_by(Income.date.desc()).all()
+    )
+
+    if search:
+        query = query.filter(
+            Income.description.ilike(f"%{search}%")
+        )
+
+    if category_id:
+        query = query.filter(
+            Income.category_id == category_id
+        )
+
+    if from_date:
+        try:
+            from_date = date.fromisoformat(from_date)
+            query = query.filter(
+                Income.date >= from_date
+            )
+        except ValueError:
+            flash("Invalid starting date.", "error")
+
+    if to_date:
+        try:
+            to_date = date.fromisoformat(to_date)
+            query = query.filter(
+                Income.date <= to_date
+            )
+        except ValueError:
+            flash("Invalid ending date.", "error")
+
+    if min_amount:
+        try:
+            min_amount = Decimal(min_amount)
+        except InvalidOperation:
+            flash("Invalid minimum amount.", "error")
+            min_amount = None
+
+    if max_amount:
+        try:
+            max_amount = Decimal(max_amount)
+        except InvalidOperation:
+            flash("Invalid maximum amount.", "error")
+            max_amount = None
+
+    if (
+        min_amount is not None
+        and max_amount is not None
+        and min_amount > max_amount
+    ):
+        flash(
+            "Minimum amount cannot be greater than maximum amount.",
+            "error"
+        )
+    else:
+        if min_amount is not None:
+            query = query.filter(
+                Income.amount >= min_amount
+            )
+
+        if max_amount is not None:
+            query = query.filter(
+                Income.amount <= max_amount
+            )
+
+    income_list = query.order_by(
+        Income.date.desc()
+    ).all()
+
+    categories = Category.query.filter_by(
+        user_id=session["user_id"],
+        type="income"
+    ).order_by(
+        Category.name.asc()
+    ).all()
 
     return render_template(
         "income/list.html",
         income=income_list,
+        categories=categories,
+        filters_applied=filters_applied
     )
 
 
