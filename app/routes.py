@@ -31,13 +31,15 @@ def home():
     recent_expenses = Expense.query.filter_by(
         user_id=user_id
     ).order_by(
-        Expense.date.desc()
+        Expense.date.desc(),
+        Expense.created_at.desc()
     ).limit(5).all()
 
     recent_income = Income.query.filter_by(
         user_id=user_id
     ).order_by(
-        Income.date.desc()
+        Income.date.desc(),
+        Income.created_at.desc()
     ).limit(5).all()
 
     return render_template(

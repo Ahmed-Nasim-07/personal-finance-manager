@@ -105,7 +105,8 @@ def list_income():
             )
 
     pagination = query.order_by(
-        Income.date.desc()
+        Income.date.desc(),
+        Income.created_at.desc()
     ).paginate(
         page=page,
         per_page=10

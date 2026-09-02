@@ -104,7 +104,8 @@ def list_expenses():
             )
 
     pagination = query.order_by(
-            Expense.date.desc()
+            Expense.date.desc(),
+            Expense.created_at.desc()
         ).paginate(
             page=page,
             per_page=10
