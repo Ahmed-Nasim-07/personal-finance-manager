@@ -26,6 +26,8 @@ def list_expenses():
     min_amount = request.args.get("min_amount") or None
     max_amount = request.args.get("max_amount") or None
 
+    page = request.args.get("page", 1, type=int)
+
     filters_applied = any([
         search,
         category_id,
@@ -101,9 +103,12 @@ def list_expenses():
                 Expense.amount <= max_amount
             )
 
-    expenses_list = query.order_by(
-        Expense.date.desc()
-    ).all()
+    pagination = query.order_by(
+            Expense.date.desc()
+        ).paginate(
+            page=page,
+            per_page=10
+        )
 
     categories = Category.query.filter_by(
         user_id=session["user_id"],
@@ -112,11 +117,16 @@ def list_expenses():
         Category.name.asc()
     ).all()
 
+    expenses_list = pagination.items
+    total_records = pagination.total
+
     return render_template(
         "expenses/list.html",
         expenses=expenses_list,
         categories=categories,
-        filters_applied=filters_applied
+        filters_applied=filters_applied,
+        total_records = total_records,
+        pagination = pagination
     )
 
 @expenses.route("/add", methods=["GET", "POST"])

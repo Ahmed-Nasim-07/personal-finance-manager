@@ -27,6 +27,8 @@ def list_income():
     min_amount = request.args.get("min_amount") or None
     max_amount = request.args.get("max_amount") or None
 
+    page = request.args.get("page", 1, type=int)
+
     filters_applied = any([
         search,
         category_id,
@@ -102,9 +104,15 @@ def list_income():
                 Income.amount <= max_amount
             )
 
-    income_list = query.order_by(
+    pagination = query.order_by(
         Income.date.desc()
-    ).all()
+    ).paginate(
+        page=page,
+        per_page=10
+    )
+
+    income_list = pagination.items
+    total_records = pagination.total
 
     categories = Category.query.filter_by(
         user_id=session["user_id"],
@@ -117,7 +125,9 @@ def list_income():
         "income/list.html",
         income=income_list,
         categories=categories,
-        filters_applied=filters_applied
+        filters_applied=filters_applied,
+        total_records = total_records,
+        pagination = pagination
     )
 
 

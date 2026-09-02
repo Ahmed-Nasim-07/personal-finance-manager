@@ -89,7 +89,7 @@
                 </span>
 
                 <strong>
-                    {{ expenses|length }}
+                    {{ total_records }}
                 </strong>
 
             </div>
@@ -108,7 +108,7 @@
             <div>
 
                 <span class="summary-label">
-                    Transactions
+                    Showing
                 </span>
 
                 <strong>
@@ -464,6 +464,74 @@
 
             </div>
 
+            {% if pagination.pages > 1 %}
+            
+            <div class="pagination">
+            
+                {% if pagination.has_prev %}
+                <a href="{{ url_for(
+                            'expenses.list_expenses',
+                            page=pagination.prev_num,
+                            search=request.args.get('search', ''),
+                            category_id=request.args.get('category_id', ''),
+                            from_date=request.args.get('from_date', ''),
+                            to_date=request.args.get('to_date', ''),
+                            min_amount=request.args.get('min_amount', ''),
+                            max_amount=request.args.get('max_amount', '')
+                        ) }}">
+                    Previous
+                </a>
+                {% endif %}
+            
+                {% for page_num in pagination.iter_pages() %}
+            
+                {% if page_num %}
+            
+                {% if page_num == pagination.page %}
+                <span class="current-page">
+                    {{ page_num }}
+                </span>
+                {% else %}
+                <a href="{{ url_for(
+                                    'expenses.list_expenses',
+                                    page=page_num,
+                                    search=request.args.get('search', ''),
+                                    category_id=request.args.get('category_id', ''),
+                                    from_date=request.args.get('from_date', ''),
+                                    to_date=request.args.get('to_date', ''),
+                                    min_amount=request.args.get('min_amount', ''),
+                                    max_amount=request.args.get('max_amount', '')
+                                ) }}">
+                    {{ page_num }}
+                </a>
+                {% endif %}
+            
+                {% else %}
+            
+                <span>...</span>
+            
+                {% endif %}
+            
+                {% endfor %}
+            
+                {% if pagination.has_next %}
+                <a href="{{ url_for(
+                            'expenses.list_expenses',
+                            page=pagination.next_num,
+                            search=request.args.get('search', ''),
+                            category_id=request.args.get('category_id', ''),
+                            from_date=request.args.get('from_date', ''),
+                            to_date=request.args.get('to_date', ''),
+                            min_amount=request.args.get('min_amount', ''),
+                            max_amount=request.args.get('max_amount', '')
+                        ) }}">
+                    Next
+                </a>
+                {% endif %}
+            
+            </div>
+            
+            {% endif %}
 
         {% else %}
 
