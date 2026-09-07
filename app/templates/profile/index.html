@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — Purity Finance{% endblock %}
+
+{% block breadcrumb %}
+Profile
+{% endblock %}
+
+{% block page_heading %}
+Profile
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-header-card">
+
+        <div class="profile-avatar">
+            {{ user.username[0]|upper }}
+        </div>
+
+        <div class="profile-header-info">
+            <h2>{{ user.username }}</h2>
+            <p>{{ user.email }}</p>
+        </div>
+
+        <a href="{{ url_for('profile.edit_profile') }}"
+           class="primary-button profile-edit-button">
+            <i class="fa-solid fa-pen"></i>
+            Edit Profile
+        </a>
+
+    </div>
+
+
+    <div class="profile-section">
+
+        <div class="section-heading">
+            <div>
+                <h3>Personal Information</h3>
+                <p>Your account information</p>
+            </div>
+        </div>
+
+
+        <div class="profile-info-grid">
+
+            <div class="profile-info-item">
+                <span class="info-label">Username</span>
+                <span class="info-value">{{ user.username }}</span>
+            </div>
+
+            <div class="profile-info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+
+            <div class="profile-info-item">
+                <span class="info-label">Member since</span>
+                <span class="info-value">
+                    {{ user.created_at.strftime("%B %d, %Y") }}
+                </span>
+            </div>
+
+            <div class="profile-info-item">
+                <span class="info-label">Account</span>
+                <span class="info-value">Personal</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

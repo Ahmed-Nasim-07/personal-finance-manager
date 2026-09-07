@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile — Purity Finance{% endblock %}
+
+{% block breadcrumb %}
+Profile
+{% endblock %}
+
+{% block page_heading %}
+Edit Profile
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-section profile-edit-section">
+
+        <div class="section-heading">
+            <div>
+                <h3>Edit Profile</h3>
+                <p>Update your account information</p>
+            </div>
+        </div>
+
+
+        <form method="POST"
+              action="{{ url_for('profile.edit_profile') }}"
+              class="profile-form">
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="{{ user.username }}"
+                    maxlength="80"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ user.email }}"
+                    maxlength="120"
+                    required
+                >
+
+            </div>
+
+
+            <div class="profile-form-actions">
+
+                <a href="{{ url_for('profile.profile_page') }}"
+                   class="secondary-button">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="primary-button">
+                    <i class="fa-solid fa-check"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -142,10 +142,8 @@
             </p>
 
 
-            <a
-                href="#"
-                class="nav-item"
-            >
+            <a href="{{ url_for('profile.profile_page') }}"
+                class="nav-item {% if request.endpoint.startswith('profile.') %} active {% endif %}">
                 <span class="nav-icon">
                     <i class="fa-solid fa-user"></i>
                 </span>
@@ -192,6 +190,8 @@
     ========================== -->
 
     <main class="main-content">
+
+        
 
         <!-- TOPBAR -->
 
@@ -267,18 +267,19 @@
                 <div class="user-profile">
 
                     <div class="user-avatar">
-                        <i class="fa-solid fa-user"></i>
+                        {% if current_user %}
+                            {{ current_user.username[0]|upper }}
+                        {% else %}
+                            <i class="fa-solid fa-user"></i>
+                        {% endif %}
                     </div>
 
                     <div class="user-info">
 
-                        <span class="user-name">
-                            Ahmed
-                        </span>
-
-                        <span class="user-role">
-                            Account
-                        </span>
+                        {% if current_user %}
+                        <span class="user-name">{{ current_user.username }}</span>
+                        <span class="user-role">Account</span>
+                        {% endif %}
 
                     </div>
 
@@ -299,6 +300,37 @@
 
         </header>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        
+        {% if messages %}
+        
+        <div class="flash-messages">
+        
+            {% for category, message in messages %}
+        
+            <div class="flash-message flash-{{ category }}">
+        
+                <i class="fa-solid
+                                {% if category == 'success' %}
+                                    fa-circle-check
+                                {% else %}
+                                    fa-circle-exclamation
+                                {% endif %}
+                            "></i>
+        
+                <span>
+                    {{ message }}
+                </span>
+        
+            </div>
+        
+            {% endfor %}
+        
+        </div>
+        
+        {% endif %}
+        
+        {% endwith %}
 
         <!-- =========================
              PAGE CONTENT

@@ -1,6 +1,7 @@
 from flask import Flask
 from config import Config
 from app.extensions import db, migrate
+from app.context_processors import inject_current_user
 
 def create_app():
     app = Flask(__name__)
@@ -9,6 +10,9 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    app.context_processor(inject_current_user)
+    
     from app import models
     from app.routes import main
     app.register_blueprint(main)
@@ -20,5 +24,7 @@ def create_app():
     app.register_blueprint(auth)
     from app.categories.routes import categories
     app.register_blueprint(categories)
+    from app.profile.routes import profile
+    app.register_blueprint(profile)
 
     return app

@@ -715,7 +715,6 @@ a {
     z-index: 90;
 }
 
-
 /* =========================================================
    RESPONSIVE
    ========================================================= */
@@ -833,4 +832,138 @@ a {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
     }
+}
+
+/* =========================================================
+   FLASH MESSAGES
+   ========================================================= */
+
+.flash-messages {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 18px 36px 0;
+}
+
+
+.flash-message {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid transparent;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    box-shadow: var(--shadow-soft);
+
+    animation: flash-slide-in 0.25s ease;
+}
+
+
+.flash-message i {
+    flex-shrink: 0;
+
+    font-size: 14px;
+}
+
+
+/* Success */
+
+.flash-success {
+    background: var(--income-soft);
+
+    color: var(--income);
+
+    border-color: rgba(72, 187, 120, 0.18);
+}
+
+
+/* Error */
+
+.flash-error {
+    background: var(--expense-soft);
+
+    color: var(--expense);
+
+    border-color: rgba(229, 62, 62, 0.18);
+}
+
+
+/* Warning */
+
+.flash-warning {
+    background: rgba(237, 137, 54, 0.12);
+
+    color: #ed8936;
+
+    border-color: rgba(237, 137, 54, 0.18);
+}
+
+
+/* Info */
+
+.flash-info {
+    background: var(--teal-soft);
+
+    color: var(--teal-light);
+
+    border-color: rgba(49, 151, 149, 0.18);
+}
+
+
+/* Animation */
+
+@keyframes flash-slide-in {
+
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   FLASH RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .flash-messages {
+        padding: 14px 18px 0;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .flash-messages {
+        padding: 12px 14px 0;
+    }
+
+    .flash-message {
+        font-size: 10px;
+
+        padding: 9px 12px;
+    }
+
 }
