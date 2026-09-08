@@ -12,7 +12,7 @@ def create_app():
     migrate.init_app(app, db)
 
     app.context_processor(inject_current_user)
-    
+
     from app import models
     from app.routes import main
     app.register_blueprint(main)
@@ -26,5 +26,7 @@ def create_app():
     app.register_blueprint(categories)
     from app.profile.routes import profile
     app.register_blueprint(profile)
+    from app.budgets.routes import budgets
+    app.register_blueprint(budgets)
 
     return app

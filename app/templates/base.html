@@ -29,7 +29,7 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/base.css') }}"
     >
-
+    
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -136,6 +136,14 @@
                 <span>Categories</span>
             </a>
 
+            <a href="{{ url_for('budgets.list_budgets') }}" class="nav-item {% if request.endpoint.startswith('budgets.') %}
+                    active
+                {% endif %}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-coins"></i>
+                </span>
+                <span>Budgets</span>
+            </a>
 
             <p class="nav-section-title nav-section-spaced">
                 ACCOUNT

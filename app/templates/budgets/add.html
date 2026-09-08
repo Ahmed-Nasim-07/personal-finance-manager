@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Add Budget | Purity Finance
+{% endblock %}
+
+{% block breadcrumb %}
+    Budgets / Add
+{% endblock %}
+
+{% block page_heading %}
+    Add Budget
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/forms.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-content form-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                BUDGET MANAGEMENT
+            </p>
+
+            <h2>
+                Create Budget
+            </h2>
+
+            <p class="page-description">
+                Set a spending limit for a category.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('budgets.list_budgets') }}"
+            class="secondary-button"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Budgets
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         FORM CARD
+    ========================== -->
+
+    <div class="form-card">
+
+        <form
+            method="POST"
+            action="{{ url_for('budgets.add_budget') }}"
+            class="finance-form"
+        >
+
+            <!-- =========================
+                 CATEGORY
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="category_id">
+                    Category
+                </label>
+
+                <select
+                    id="category_id"
+                    name="category_id"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select category
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option value="{{ category.id }}">
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <p class="field-help">
+                    Choose the expense category this budget applies to.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 BUDGET AMOUNT
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Budget Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="5000.00"
+                    required
+                >
+
+                <p class="field-help">
+                    Set the maximum amount you plan to spend for this category.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 MONTH
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="month">
+                    Month
+                </label>
+
+                <select
+                    id="month"
+                    name="month"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select month
+                    </option>
+
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+
+                </select>
+
+                <p class="field-help">
+                    Select the month this budget is for.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 YEAR
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="year">
+                    Year
+                </label>
+
+                <input
+                    type="number"
+                    id="year"
+                    name="year"
+                    min="2000"
+                    max="2100"
+                    value="2026"
+                    required
+                >
+
+                <p class="field-help">
+                    Select the year this budget is for.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('budgets.list_budgets') }}"
+                    class="secondary-button"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Create Budget
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
+

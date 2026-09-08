@@ -31,6 +31,9 @@
     --expense: #e53e3e;
     --expense-soft: rgba(229, 62, 62, 0.14);
 
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
     --border: rgba(148, 163, 184, 0.12);
     --border-strong: rgba(148, 163, 184, 0.2);
 
