@@ -190,6 +190,74 @@
     </div>
 
     <!-- =========================
+         QUICK ACTIONS
+    ========================== -->
+
+    <section class="quick-actions-card">
+
+        <div class="quick-actions-content">
+
+            <div>
+
+                <p class="card-eyebrow">
+                    QUICK ACTIONS
+                </p>
+
+                <h3>
+                    Manage your finances
+                </h3>
+
+                <p>
+                    Quickly add a transaction or manage your categories.
+                </p>
+
+            </div>
+
+
+            <div class="quick-actions-buttons">
+
+                <a
+                    href="{{ url_for('expenses.add_expense') }}"
+                    class="primary-button"
+                >
+
+                    <i class="fa-solid fa-minus"></i>
+
+                    Add Expense
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('income.add_income') }}"
+                    class="secondary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Income
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('categories.list_categories') }}"
+                    class="secondary-button"
+                >
+
+                    <i class="fa-solid fa-layer-group"></i>
+
+                    Categories
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
          FINANCIAL OVERVIEW CHART
     ========================== -->
     
@@ -225,6 +293,143 @@
     
         <div class="chart-container">
             <canvas id="incomeExpenseChart"></canvas>
+        </div>
+    
+    </section>
+
+    <!-- =========================
+         SPENDING ANALYTICS
+    ========================== -->
+    
+    <div class="dashboard-grid">
+    
+        <!-- =========================
+             SPENDING BY CATEGORY
+        ========================== -->
+    
+        <section class="dashboard-card chart-card">
+    
+            <div class="card-header">
+    
+                <div>
+    
+                    <p class="card-eyebrow">
+                        SPENDING BREAKDOWN
+                    </p>
+    
+                    <h3>
+                        Spending by Category
+                    </h3>
+    
+                    <p class="chart-subtitle">
+                        See where your money is going.
+                    </p>
+    
+                </div>
+    
+                <select id="categoryPeriod" class="chart-period-select">
+    
+                    <option value="6months" {% if category_period=="6months" %}selected{% endif %}>
+                        Last 6 months
+                    </option>
+    
+                    <option value="all" {% if category_period=="all" %}selected{% endif %}>
+                        All time
+                    </option>
+    
+                </select>
+    
+            </div>
+    
+            <script type="application/json" id="category-data">
+                {{ category_data | tojson }}
+            </script>
+    
+            <div class="category-chart-container">
+    
+                <canvas id="spendingCategoryChart"></canvas>
+    
+            </div>
+    
+        </section>
+    
+    
+        <!-- =========================
+             MONTHLY SPENDING TREND
+        ========================== -->
+    
+        <section class="dashboard-card chart-card">
+    
+            <div class="card-header">
+    
+                <div>
+    
+                    <p class="card-eyebrow">
+                        SPENDING TREND
+                    </p>
+    
+                    <h3>
+                        Monthly Spending
+                    </h3>
+    
+                    <p class="chart-subtitle">
+                        Track how your expenses change over time.
+                    </p>
+    
+                </div>
+    
+                <span class="chart-period">
+                    Last 6 months
+                </span>
+    
+            </div>
+    
+            <div class="monthly-spending-chart-container">
+    
+                <canvas id="monthlySpendingChart"></canvas>
+    
+            </div>
+    
+        </section>
+    
+    </div>
+
+    <!-- =========================
+         BUDGET PERFORMANCE
+    ========================== -->
+    
+    <section class="dashboard-card chart-card budget-card">
+    
+        <div class="card-header">
+    
+            <div>
+    
+                <p class="card-eyebrow">
+                    BUDGET PERFORMANCE
+                </p>
+    
+                <h3>
+                    Budget vs Spending
+                </h3>
+    
+                <p class="chart-subtitle">
+                    Compare your budgets with this month's spending.
+                </p>
+    
+            </div>
+    
+            <span class="chart-period">
+                This month
+            </span>
+    
+        </div>
+    
+        <script type="application/json" id="budget-data">
+            {{ budget_data | tojson }}
+        </script>
+    
+        <div class="budget-chart-container">
+            <canvas id="budgetPerformanceChart"></canvas>
         </div>
     
     </section>
@@ -495,75 +700,6 @@
         </section>
 
     </div>
-
-
-    <!-- =========================
-         QUICK ACTIONS
-    ========================== -->
-
-    <section class="quick-actions-card">
-
-        <div class="quick-actions-content">
-
-            <div>
-
-                <p class="card-eyebrow">
-                    QUICK ACTIONS
-                </p>
-
-                <h3>
-                    Manage your finances
-                </h3>
-
-                <p>
-                    Quickly add a transaction or manage your categories.
-                </p>
-
-            </div>
-
-
-            <div class="quick-actions-buttons">
-
-                <a
-                    href="{{ url_for('expenses.add_expense') }}"
-                    class="primary-button"
-                >
-
-                    <i class="fa-solid fa-minus"></i>
-
-                    Add Expense
-
-                </a>
-
-
-                <a
-                    href="{{ url_for('income.add_income') }}"
-                    class="secondary-button"
-                >
-
-                    <i class="fa-solid fa-plus"></i>
-
-                    Add Income
-
-                </a>
-
-
-                <a
-                    href="{{ url_for('categories.list_categories') }}"
-                    class="secondary-button"
-                >
-
-                    <i class="fa-solid fa-layer-group"></i>
-
-                    Categories
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
 
 </section>
 
