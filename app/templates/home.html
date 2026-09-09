@@ -189,6 +189,45 @@
 
     </div>
 
+    <!-- =========================
+         FINANCIAL OVERVIEW CHART
+    ========================== -->
+    
+    <section class="dashboard-card chart-card">
+    
+        <div class="card-header">
+    
+            <div>
+    
+                <p class="card-eyebrow">
+                    FINANCIAL OVERVIEW
+                </p>
+    
+                <h3>
+                    Income vs Expenses
+                </h3>
+    
+                <p class="chart-subtitle">
+                    Your financial activity over the last 6 months.
+                </p>
+    
+            </div>
+    
+            <span class="chart-period">
+                Last 6 months
+            </span>
+    
+        </div>
+    
+        <script type="application/json" id="monthly-data">
+            {{ monthly_data | tojson }}
+        </script>
+    
+        <div class="chart-container">
+            <canvas id="incomeExpenseChart"></canvas>
+        </div>
+    
+    </section>
 
     <!-- =========================
          RECENT TRANSACTIONS
@@ -527,5 +566,13 @@
     </section>
 
 </section>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 {% endblock %}

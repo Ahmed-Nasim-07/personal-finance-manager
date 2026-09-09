@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Blueprint, render_template, session
 
 from app.auth.utils import login_required
@@ -13,6 +15,52 @@ main = Blueprint("main", __name__)
 @login_required
 def home():
     user_id = session["user_id"]
+
+    today = date.today()
+
+    current_year = today.year
+    current_month = today.month
+
+    monthly_data = []
+
+    for offset in range(5, -1, -1):
+        total_months = (
+            current_year * 12
+            + (current_month - 1)
+            - offset
+        )
+
+        year = total_months // 12
+        month = total_months % 12 + 1
+
+        start_date = date(year, month, 1)
+
+        if month == 12:
+            end_date = date(year + 1, 1, 1)
+        else:
+            end_date = date(year, month + 1, 1)
+
+        monthly_income = db.session.query(
+            db.func.coalesce(db.func.sum(Income.amount), 0)
+        ).filter(
+            Income.user_id == user_id,
+            Income.date >= start_date,
+            Income.date < end_date
+        ).scalar()
+
+        monthly_expenses = db.session.query(
+            db.func.coalesce(db.func.sum(Expense.amount), 0)
+        ).filter(
+            Expense.user_id == user_id,
+            Expense.date >= start_date,
+            Expense.date < end_date
+        ).scalar()
+
+        monthly_data.append({
+            "month": start_date.strftime("%b"),
+            "income": monthly_income,
+            "expenses": monthly_expenses,
+        })
 
     total_income = Income.query.filter_by(
         user_id=user_id
@@ -49,4 +97,5 @@ def home():
         balance=balance,
         recent_expenses=recent_expenses,
         recent_income=recent_income,
+        monthly_data=monthly_data
     )

@@ -1454,3 +1454,41 @@ a {
         animation-iteration-count: 1 !important;
     }
 }
+
+/* =========================
+   FINANCIAL OVERVIEW CHART
+========================= */
+
+.chart-card {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.chart-subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.chart-period {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-hover);
+    white-space: nowrap;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    margin-top: 20px;
+}
+
+/* Space between chart and recent transactions */
+
+.chart-card + .dashboard-grid {
+    margin-top: 20px;
+}
