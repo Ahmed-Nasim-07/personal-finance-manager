@@ -1,7 +1,8 @@
 from datetime import date
 from decimal import Decimal, InvalidOperation
-
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import csv
+from io import StringIO
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, Response
 
 from app.auth.utils import login_required
 from app.extensions import db
@@ -15,28 +16,13 @@ income_bp = Blueprint(
     url_prefix="/income",
 )
 
-
-@income_bp.route("/")
-@login_required
-def list_income():
-
+def build_income_query():
     search = request.args.get("search", "").strip()
     category_id = request.args.get("category_id")
     from_date = request.args.get("from_date")
     to_date = request.args.get("to_date")
     min_amount = request.args.get("min_amount") or None
     max_amount = request.args.get("max_amount") or None
-
-    page = request.args.get("page", 1, type=int)
-
-    filters_applied = any([
-        search,
-        category_id,
-        from_date,
-        to_date,
-        min_amount,
-        max_amount
-    ])
 
     query = Income.query.filter_by(
         user_id=session["user_id"]
@@ -104,6 +90,32 @@ def list_income():
                 Income.amount <= max_amount
             )
 
+    return query
+
+@income_bp.route("/")
+@login_required
+def list_income():
+
+    search = request.args.get("search", "").strip()
+    category_id = request.args.get("category_id")
+    from_date = request.args.get("from_date")
+    to_date = request.args.get("to_date")
+    min_amount = request.args.get("min_amount") or None
+    max_amount = request.args.get("max_amount") or None
+
+    page = request.args.get("page", 1, type=int)
+
+    filters_applied = any([
+        search,
+        category_id,
+        from_date,
+        to_date,
+        min_amount,
+        max_amount
+    ])
+
+    query = build_income_query()
+
     pagination = query.order_by(
         Income.date.desc(),
         Income.created_at.desc()
@@ -131,6 +143,45 @@ def list_income():
         pagination = pagination
     )
 
+@income_bp.route("/export")
+@login_required
+def export_income():
+    query = build_income_query()
+
+    income_list = query.order_by(
+        Income.date.desc(),
+        Income.created_at.desc()
+    ).all()
+
+    output = StringIO()
+
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "Date",
+        "Category",
+        "Description",
+        "Amount"
+    ])
+
+    for income in income_list:
+        writer.writerow([
+            income.date.strftime("%Y-%m-%d"),
+            income.category.name,
+            income.description or "",
+            f"{income.amount:.2f}"
+        ])
+
+    response = Response(
+        output.getvalue(),
+        mimetype="text/csv"
+    )
+
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=income.csv"
+    )
+
+    return response
 
 @income_bp.route("/add", methods=["GET", "POST"])
 @login_required

@@ -142,10 +142,19 @@
 
             </div>
 
-            <button type="button" id="filterToggle" class="secondary-button">
-                <i class="fa-solid fa-filter"></i>
-                Filters
-            </button>
+            <div class="card-header-actions">
+            
+                <button type="button" id="filterToggle" class="secondary-button">
+                    <i class="fa-solid fa-filter"></i>
+                    Filters
+                </button>
+            
+                <a href="{{ url_for('income.export_income', **request.args) }}" class="secondary-button">
+                    <i class="fa-solid fa-file-csv"></i>
+                    Export CSV
+                </a>
+            
+            </div>
 
         </div>
 

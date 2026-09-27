@@ -1,7 +1,8 @@
 from datetime import date
 from decimal import Decimal, InvalidOperation
-
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import csv
+from io import StringIO
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, Response
 from app.auth.utils import login_required
 from app.extensions import db
 from app.models.expense import Expense
@@ -14,28 +15,13 @@ expenses = Blueprint(
     url_prefix="/expenses",
 )
 
-
-@expenses.route("/")
-@login_required
-def list_expenses():
-
+def build_expense_query():
     search = request.args.get("search", "").strip()
     category_id = request.args.get("category_id")
     from_date = request.args.get("from_date")
     to_date = request.args.get("to_date")
     min_amount = request.args.get("min_amount") or None
     max_amount = request.args.get("max_amount") or None
-
-    page = request.args.get("page", 1, type=int)
-
-    filters_applied = any([
-        search,
-        category_id,
-        from_date,
-        to_date,
-        min_amount,
-        max_amount
-    ])
 
     query = Expense.query.filter_by(
         user_id=session["user_id"]
@@ -103,6 +89,32 @@ def list_expenses():
                 Expense.amount <= max_amount
             )
 
+    return query
+
+@expenses.route("/")
+@login_required
+def list_expenses():
+
+    search = request.args.get("search", "").strip()
+    category_id = request.args.get("category_id")
+    from_date = request.args.get("from_date")
+    to_date = request.args.get("to_date")
+    min_amount = request.args.get("min_amount") or None
+    max_amount = request.args.get("max_amount") or None
+
+    page = request.args.get("page", 1, type=int)
+
+    filters_applied = any([
+        search,
+        category_id,
+        from_date,
+        to_date,
+        min_amount,
+        max_amount
+    ])
+
+    query = build_expense_query()
+    
     pagination = query.order_by(
             Expense.date.desc(),
             Expense.created_at.desc()
@@ -129,6 +141,46 @@ def list_expenses():
         total_records = total_records,
         pagination = pagination
     )
+
+@expenses.route("/export")
+@login_required
+def export_expenses():
+    query = build_expense_query()
+
+    expenses_list = query.order_by(
+        Expense.date.desc(),
+        Expense.created_at.desc()
+    ).all()
+
+    output = StringIO()
+
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "Date",
+        "Category",
+        "Description",
+        "Amount"
+    ])
+
+    for expense in expenses_list:
+        writer.writerow([
+            expense.date.strftime("%Y-%m-%d"),
+            expense.category.name,
+            expense.description or "",
+            f"{expense.amount:.2f}"
+        ])
+
+    response = Response(
+        output.getvalue(),
+        mimetype="text/csv"
+    )
+
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=expenses.csv"
+    )
+
+    return response
 
 @expenses.route("/add", methods=["GET", "POST"])
 @login_required
