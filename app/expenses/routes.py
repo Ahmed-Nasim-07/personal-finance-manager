@@ -1,13 +1,24 @@
 from datetime import date
 from decimal import Decimal, InvalidOperation
 import csv
-from io import StringIO
+from io import StringIO, BytesIO
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, Response
 from app.auth.utils import login_required
 from app.extensions import db
 from app.models.expense import Expense
 from app.models.category import Category
 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import mm
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 expenses = Blueprint(
     "expenses",
@@ -181,6 +192,219 @@ def export_expenses():
     )
 
     return response
+
+@expenses.route("/export/pdf")
+@login_required
+def export_expenses_pdf():
+    query = build_expense_query()
+
+    expenses_list = query.order_by(
+        Expense.date.desc(),
+        Expense.created_at.desc()
+    ).all()
+
+    total_expenses = sum(
+        (expense.amount for expense in expenses_list),
+        Decimal("0.00")
+    )
+
+    transaction_count = len(expenses_list)
+
+    if transaction_count:
+        average_expense = (
+            total_expenses / transaction_count
+        ).quantize(Decimal("0.01"))
+    else:
+        average_expense = Decimal("0.00")
+
+    output = BytesIO()
+
+    document = SimpleDocTemplate(
+        output,
+        pagesize=A4,
+        rightMargin=15 * mm,
+        leftMargin=15 * mm,
+        topMargin=15 * mm,
+        bottomMargin=15 * mm,
+    )
+
+    styles = getSampleStyleSheet()
+
+    story = []
+
+    story.append(
+        Paragraph(
+            "Personal Finance Manager",
+            styles["Title"]
+        )
+    )
+
+    story.append(
+        Paragraph(
+            "Expense Report",
+            styles["Heading2"]
+        )
+    )
+
+    story.append(Spacer(1, 8))
+
+    story.append(
+        Paragraph(
+            f"Generated: {date.today().strftime('%d-%m-%Y')}",
+            styles["Normal"]
+        )
+    )
+
+    story.append(Spacer(1, 15))
+
+    story.append(
+        Paragraph(
+            "Summary",
+            styles["Heading2"]
+        )
+    )
+
+    summary_data = [
+        ["Total Expenses", f"Rs. {total_expenses:.2f}"],
+        ["Transactions", str(transaction_count)],
+        ["Average Expense", f"Rs. {average_expense:.2f}"],
+    ]
+
+    summary_table = Table(
+        summary_data,
+        colWidths=[80 * mm, 80 * mm]
+    )
+
+    summary_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), colors.whitesmoke),
+            ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.lightgrey),
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("FONTNAME", (1, 0), (1, -1), "Helvetica"),
+            ("PADDING", (0, 0), (-1, -1), 8),
+        ])
+    )
+
+    story.append(summary_table)
+
+    story.append(Spacer(1, 20))
+
+    story.append(
+        Paragraph(
+            "Expense Details",
+            styles["Heading2"]
+        )
+    )
+
+    table_data = [
+        ["Date", "Category", "Description", "Amount"]
+    ]
+
+    for expense in expenses_list:
+        table_data.append([
+            expense.date.strftime("%d-%m-%Y"),
+            expense.category.name,
+            expense.description or "",
+            f"Rs. {expense.amount:.2f}",
+        ])
+
+    if not expenses_list:
+        table_data.append([
+            "",
+            "",
+            "No expenses found.",
+            "",
+        ])
+
+    expense_table = Table(
+        table_data,
+        colWidths=[
+            28 * mm,
+            35 * mm,
+            75 * mm,
+            30 * mm,
+        ],
+        repeatRows=1
+    )
+
+    expense_table.setStyle(
+        TableStyle([
+            (
+                "BACKGROUND",
+                (0, 0),
+                (-1, 0),
+                colors.darkgrey
+            ),
+            (
+                "TEXTCOLOR",
+                (0, 0),
+                (-1, 0),
+                colors.white
+            ),
+            (
+                "FONTNAME",
+                (0, 0),
+                (-1, 0),
+                "Helvetica-Bold"
+            ),
+            (
+                "FONTNAME",
+                (0, 1),
+                (-1, -1),
+                "Helvetica"
+            ),
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                0.5,
+                colors.grey
+            ),
+            (
+                "PADDING",
+                (0, 0),
+                (-1, -1),
+                6
+            ),
+            (
+                "VALIGN",
+                (0, 0),
+                (-1, -1),
+                "TOP"
+            ),
+            (
+                "ALIGN",
+                (-1, 1),
+                (-1, -1),
+                "RIGHT"
+            ),
+        ])
+    )
+
+    story.append(expense_table)
+
+    story.append(Spacer(1, 15))
+
+    story.append(
+        Paragraph(
+            f"Total: Rs. {total_expenses:.2f}",
+            styles["Heading3"]
+        )
+    )
+
+    document.build(story)
+
+    output.seek(0)
+
+    return Response(
+        output.getvalue(),
+        mimetype="application/pdf",
+        headers={
+            "Content-Disposition":
+                "attachment; filename=expenses.pdf"
+        }
+    )
 
 @expenses.route("/add", methods=["GET", "POST"])
 @login_required

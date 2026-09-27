@@ -153,7 +153,11 @@
                     <i class="fa-solid fa-file-csv"></i>
                     Export CSV
                 </a>
-            
+                
+                <a href="{{ url_for('income.export_income_pdf', **request.args) }}" class="secondary-button">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Export PDF
+                </a>
             </div>
 
         </div>
