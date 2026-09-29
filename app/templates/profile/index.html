@@ -76,6 +76,24 @@ Profile
 
     </div>
 
+    <div class="profile-section">
+    
+        <div class="section-heading">
+            <div>
+                <h3>Account Actions</h3>
+                <p>Manage your account session</p>
+            </div>
+        </div>
+    
+        <div class="profile-actions">
+            <a href="{{ url_for('auth.logout') }}" class="secondary-button">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    
+    </div>
+
 </section>
 
 {% endblock %}
