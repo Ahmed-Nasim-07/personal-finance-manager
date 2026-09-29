@@ -94,6 +94,25 @@ Profile
     
     </div>
 
+    <div class="profile-section danger-zone">
+    
+        <div class="section-heading">
+            <div>
+                <h3>Danger Zone</h3>
+                <p>Permanently delete your account and all associated financial data.</p>
+            </div>
+        </div>
+    
+        <div class="profile-actions">
+    
+            <a href="{{ url_for('profile.delete_account') }}" class="danger-button">
+                <i class="fa-solid fa-trash"></i>
+                Delete Account
+            </a>
+    
+        </div>
+    
+    </div>
 </section>
 
 {% endblock %}

@@ -1,8 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-
+from werkzeug.security import check_password_hash
 from app.auth.utils import login_required
 from app.extensions import db
 from app.models.user import User
+from app.models.expense import Expense
+from app.models.income import Income
+from app.models.category import Category
+from app.models.budget import Budget
 
 
 profile = Blueprint("profile", __name__, url_prefix="/profile")
@@ -75,4 +79,79 @@ def edit_profile():
     return render_template(
         "profile/edit.html",
         user=user
+    )
+
+@profile.route("/delete", methods=["GET", "POST"])
+@login_required
+def delete_account():
+
+    user = User.query.filter_by(
+        id=session["user_id"]
+    ).first_or_404()
+
+    if request.method == "POST":
+
+        password = request.form.get("password", "")
+
+        if not password:
+            flash("Password is required.", "error")
+            return render_template(
+                "profile/delete.html"
+            )
+
+        if not check_password_hash(
+            user.password_hash,
+            password
+        ):
+            flash("Incorrect password.", "error")
+            return render_template(
+                "profile/delete.html"
+            )
+
+        try:
+            db.session.query(Expense).filter_by(
+                user_id=user.id
+            ).delete()
+
+            db.session.query(Income).filter_by(
+                user_id=user.id
+            ).delete()
+
+            db.session.query(Budget).filter_by(
+                user_id=user.id
+            ).delete()
+
+            db.session.query(Category).filter_by(
+                user_id=user.id
+            ).delete()
+
+            db.session.delete(user)
+
+            db.session.commit()
+
+        except Exception:
+            db.session.rollback()
+
+            flash(
+                "Unable to delete your account. Please try again.",
+                "error"
+            )
+
+            return render_template(
+                "profile/delete.html"
+            )
+
+        session.clear()
+
+        flash(
+            "Your account has been permanently deleted.",
+            "success"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+    return render_template(
+        "profile/delete.html"
     )

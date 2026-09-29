@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Account — Purity Finance{% endblock %}
+
+{% block breadcrumb %}
+Delete Account
+{% endblock %}
+
+{% block page_heading %}
+Delete Account
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-section danger-zone">
+
+        <div class="section-heading">
+            <div>
+                <h3>Delete Account</h3>
+                <p>
+                    This action will permanently delete your account
+                    and all associated financial data.
+                </p>
+            </div>
+        </div>
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="password">
+                    Enter your password to continue
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                >
+
+            </div>
+
+            <div class="profile-actions">
+
+                <button
+                    type="submit"
+                    class="danger-button"
+                >
+                    <i class="fa-solid fa-trash"></i>
+                    Delete My Account
+                </button>
+
+                <a
+                    href="{{ url_for('profile.profile_page') }}"
+                    class="secondary-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
